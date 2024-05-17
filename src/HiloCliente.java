@@ -4,28 +4,43 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class HiloCliente extends Thread{
+public class HiloCliente extends Thread {
+    private Socket socketCliente;
+    private static int indicePregunta = 0;
 
-    Socket socketCliente;
-
-    public HiloCliente(Socket socketCliente){
+    public HiloCliente(Socket socketCliente) {
         this.socketCliente = socketCliente;
     }
 
-    public void run(){
+    public void run() {
         try {
-            // Crear buffers para recibir y enviar datos al cliente
             BufferedReader entrada = new BufferedReader(new InputStreamReader(socketCliente.getInputStream()));
             PrintWriter salida = new PrintWriter(socketCliente.getOutputStream(), true);
 
-            // Leer los datos recibidos por el cliente almacenados en entrada
-            String datosRecibidos = entrada.readLine();
-            System.out.println("El mensaje recibido es: " + datosRecibidos);
+            while (true) {
+                if (indicePregunta < Servidor.getPreguntas().size()) {
+                    Pregunta preguntaActual = Servidor.getPreguntas().get(indicePregunta);
+                    salida.println(preguntaActual.getPregunta());
 
-            // Escribir los datos a enviar en el buffer de salida
-            String mensajeEnviar = "Hola soy el servidor";
-            salida.println(mensajeEnviar);
-        }catch (IOException e){
+                    String respuestaCliente = entrada.readLine();
+                    if (preguntaActual.esRespuestaCorrecta(respuestaCliente)) {
+                        salida.println("Correcto!");
+                    } else {
+                        salida.println("Incorrecto. La respuesta correcta es: " + preguntaActual.getRespuestaCorrecta());
+                    }
+
+                    indicePregunta++;
+                    if (indicePregunta < Servidor.getPreguntas().size()) {
+                        salida.println("Siguiente pregunta:");
+                    } else {
+                        salida.println("No hay más preguntas.");
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

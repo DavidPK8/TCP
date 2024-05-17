@@ -1,27 +1,37 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Servidor {
+    private static List<Pregunta> preguntas;
+
+    static {
+        preguntas = new ArrayList<>();
+        preguntas.add(new Pregunta("¿Cuál es la capital de Francia?", "Paris"));
+        preguntas.add(new Pregunta("¿Cuántos continentes hay en el mundo?", "7"));
+        preguntas.add(new Pregunta("¿Quién pintó la Mona Lisa?", "Leonardo da Vinci"));
+        preguntas.add(new Pregunta("¿Cuál es el planeta más grande del sistema solar?", "Jupiter"));
+        preguntas.add(new Pregunta("¿Qué elemento tiene el símbolo 'O' en la tabla periódica?", "Oxigeno"));
+    }
+
     public static void main(String[] args) {
         try {
-            // Crear socket
             ServerSocket socketServidor = new ServerSocket(1234);
             System.out.println("Esperando Conexiones...");
 
             while (true) {
-                // Esperar y aceptar conexiones de clientes
                 Socket socketCliente = socketServidor.accept();
-
-                // Crear un hilo para cada cliente
                 HiloCliente hilo = new HiloCliente(socketCliente);
                 hilo.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<Pregunta> getPreguntas() {
+        return preguntas;
     }
 }
