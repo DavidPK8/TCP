@@ -23,7 +23,7 @@ public class Cliente {
                     break;
                 } else if (datosRecibidos.equals("Siguiente pregunta:")) {
                     continue;
-                } else if (datosRecibidos.startsWith("Incorrecto.") || datosRecibidos.equals("Correcto!")) {
+                } else if (datosRecibidos.equals("Incorrecto.") || datosRecibidos.equals("Correcto!")) {
                     continue;
                 } else {
                     System.out.print("Escriba su respuesta: ");

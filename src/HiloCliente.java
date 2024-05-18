@@ -23,6 +23,7 @@ public class HiloCliente extends Thread {
                     salida.println(preguntaActual.getPregunta());
 
                     String respuestaCliente = entrada.readLine();
+                    System.out.println("Respuesta: " + respuestaCliente);
                     if (preguntaActual.esRespuestaCorrecta(respuestaCliente)) {
                         salida.println("Correcto!");
                     } else {
